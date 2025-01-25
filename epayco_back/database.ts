@@ -7,14 +7,12 @@ const pool = createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
 
-//creamos la DB y las tablas si no existen
-
+//creamos la DB si no existe
 const createDB = async () => {
     try {
         const connection = await pool.getConnection();
@@ -26,7 +24,8 @@ const createDB = async () => {
     }
 };
 
-const createTable = async () => {
+//creamos las tablas si no existen
+const createTables = async () => {
     const usersTable = `
         CREATE TABLE IF NOT EXISTS users (
             id INT PRIMARY KEY AUTO_INCREMENT,
@@ -34,7 +33,7 @@ const createTable = async () => {
             fullname VARCHAR(50) NOT NULL,
             email VARCHAR(100) NOT NULL,
             phone VARCHAR(15) NOT NULL
-        )`;
+    )`;
 
     const walletsTable = `
         CREATE TABLE IF NOT EXISTS wallets (
@@ -42,7 +41,7 @@ const createTable = async () => {
             id_user INT NOT NULL,
             balance DECIMAL(10, 2) NOT NULL DEFAULT 0,
             FOREIGN KEY (id_user) REFERENCES users(id)
-        )`;
+    )`;
         
     const shoppingTable = `
         CREATE TABLE IF NOT EXISTS shopping (
@@ -53,32 +52,33 @@ const createTable = async () => {
             amount DECIMAL(10, 2) NOT NULL,
             deleted_at TIMESTAMP NULL DEFAULT NULL,
             FOREIGN KEY (id_user) REFERENCES users(id)
-        )`;
+    )`;
+    
+    const insertUser = `INSERT INTO users (dni, fullname,email,phone) VALUES ("21640301","Yefferson Mujica","jefersonmujica@gmail.com","04127261953")`;
+    
+    const insertWallet = `INSERT INTO wallets (id_user, balance) VALUES (1, 100)`;
 
     try {
         const connection = await pool.getConnection();
+        await connection.query(`USE ${process.env.DB_NAME}`);
         await connection.query(usersTable);
         await connection.query(walletsTable);
         await connection.query(shoppingTable);
+        await connection.query(insertUser);
+        await connection.query(insertWallet);
         connection.release();
         console.log('Tables created or already exist');
-    }catch (error) {
+    } catch (error) {
         console.log('Error creating tables', error);
     }
 };
 
-//inicalizamos la db y creamos las tablas si no existen
-
-export const getConnectionDB = async () => {
-    try {
-        await pool.getConnection();
-        console.log('DB connected');
-    } catch (error) {
-        console.log('DB connection error', error);
-    }
+//inicializamos la db y creamos las tablas si no existen
+export const initializeDB = async () => {
+    await createDB();
+    await createTables();
 };
 
-createDB();
-createTable();
+// initializeDB();
 
 export default pool;

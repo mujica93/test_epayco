@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link } from "@heroui/react";
 
 const NavbarComponent = () => {
@@ -10,8 +10,9 @@ const NavbarComponent = () => {
         );
     };
 
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [currentPath, setCurrentPath] = useState("");
+    
     const menuItems = [
         {
             label: "Inicio",
@@ -35,6 +36,14 @@ const NavbarComponent = () => {
         }
     ];
 
+    useEffect(() => {
+
+        if (typeof window !== "undefined") {
+            setCurrentPath(window.location.pathname);
+        }
+
+    }, []);
+
     return (
         <Navbar onMenuOpenChange={setIsMenuOpen} isBordered >
             <NavbarContent>
@@ -50,13 +59,13 @@ const NavbarComponent = () => {
 
                 {
                     menuItems.map((item, index) => (
-                        <NavbarItem key={`${item}-${index}`} isActive={item.route === window.location.pathname}>
+                        <NavbarItem key={`${item}-${index}`} isActive={item.route === currentPath}>
                             <Link  
                                 href={item.route}
                                 style={{
                                     padding: "0.5rem 1rem",
                                     borderRadius: "0.5rem",
-                                    backgroundColor: item.route === window.location.pathname ? "#f0f0f0" : "transparent",
+                                    backgroundColor: item.route === currentPath ? "#f0f0f0" : "transparent",
                                     color: "#1c0e49"
                                 }}
                             >
@@ -71,7 +80,7 @@ const NavbarComponent = () => {
 
             <NavbarMenu>
                 {menuItems.map((item, index) => (
-                    <NavbarMenuItem key={`${item}-${index}`} isActive={item.route === window.location.pathname}>
+                    <NavbarMenuItem key={`${item}-${index}`} isActive={item.route === currentPath}>
                     <Link
                         className="w-full"
                         href={item.route}

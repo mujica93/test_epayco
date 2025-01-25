@@ -189,7 +189,8 @@ payController.confirmPayment = async (req: Request, res: Response) => {;
             responseJson.data = null;
             return res.status(400).json(responseJson);
         }
-
+        
+        //validamos si el token y el id de sesión son correctos
         const [shopping]: any = await connection.query('SELECT id_user, amount FROM shopping WHERE id_session = ? AND token = ? AND deleted_at IS NULL', [sessionId,token]);
 
         if (shopping.length === 0) {
@@ -204,6 +205,19 @@ payController.confirmPayment = async (req: Request, res: Response) => {;
         const userId = shopping[0].id_user;
         const amount = shopping[0].amount;
 
+        //compravamos si el saldo es suficiente para realizar la compra
+        const [walletBalance]: any = await connection.query('SELECT balance FROM wallets WHERE id_user = ?', [userId]);
+
+        if (walletBalance[0].balance < amount) {
+            connection.release();
+            responseJson.code = 400;
+            responseJson.success = false;
+            responseJson.message = 'Saldo insuficiente';
+            responseJson.data = null;
+            return res.status(400).json(responseJson);
+        }
+
+        //actualizamos el saldo de la billetera
         await connection.query('UPDATE wallets SET balance = balance - ? WHERE id_user = ?', [amount, userId]);
         
         const wallet: any = await connection.query('SELECT balance FROM wallets WHERE id_user = ?', [userId]);

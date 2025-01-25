@@ -91,12 +91,12 @@ const useWallet = () => {
                 
                 if (response.success) {
                     setShowModalLoading(false);
-                    handleModalInfo(5000);
+                    setShowModalInfo(true);
                     setModalInfoMessage(response.message);
                     emptyFields();
                 }else{
                     setShowModalLoading(false);
-                    handleModalInfo(5000);
+                    setShowModalInfo(true);
                     setModalInfoMessage(response.message);
                 }
                 
@@ -261,7 +261,7 @@ const useWallet = () => {
         const value = event;
         const regex = /^[0-9]+(\.[0-9]{0,2})?$/;
     
-        if (regex.test(value)) {
+        if (regex.test(value) || value === '') {
             setState(value);
         }
     };
@@ -301,6 +301,10 @@ const useWallet = () => {
         navigate.push('/');
     };
 
+    const closeModalDetail = () => {
+        setShowModalInfo(false);
+    };
+
     useEffect(() => {
 
         if (token && sessionId) {
@@ -328,6 +332,7 @@ const useWallet = () => {
         validateBuyForm,
         modalInfoMessage,
         showModalLoading,
+        closeModalDetail,
         handlerBuyWallet,
         handlerConfirmBuy,
         validateChargeForm,

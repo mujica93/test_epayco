@@ -7,7 +7,7 @@ import ModalLoading from '@components/modal-loading/ModalLoading';
 
 const chargePage = () => {
 
-    const { onlyNumbers, dni, setDni, phone, setPhone, handlerDetailWallet, errorMessages, errors, onBlurInput, showModalInfo, showModalLoading, modalInfoMessage } = useWallet();
+    const { onlyNumbers, dni, setDni, phone, setPhone, handlerDetailWallet, errorMessages, errors, onBlurInput, showModalInfo, showModalLoading, modalInfoMessage, closeModalDetail } = useWallet();
 
     return (
         <div className="flex flex-col items-center justify-center bg-background text-foreground mt-40">
@@ -83,7 +83,7 @@ const chargePage = () => {
             </div>
 
             {
-                showModalInfo && <ModalInfo title='Recarga de Billetera' message={modalInfoMessage} />
+                showModalInfo && <ModalInfo title='Recarga de Billetera' message={modalInfoMessage} openModal={showModalInfo} onCloseManual={closeModalDetail}/>
             }
 
             {
