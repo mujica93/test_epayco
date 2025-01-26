@@ -208,7 +208,7 @@ payController.confirmPayment = async (req: Request, res: Response) => {;
         //compravamos si el saldo es suficiente para realizar la compra
         const [walletBalance]: any = await connection.query('SELECT balance FROM wallets WHERE id_user = ?', [userId]);
 
-        if (walletBalance[0].balance < amount) {
+        if (parseFloat(walletBalance[0].balance) < parseFloat(amount)) {
             connection.release();
             responseJson.code = 400;
             responseJson.success = false;
@@ -297,6 +297,6 @@ async function validateWallet(dni: string, phone: string) {
     }
 
     return true;
-}
-;
+};
+
 export default payController;

@@ -75,7 +75,7 @@ const chargePage = () => {
                             fontSize: 15
                         }}
                     >
-                        Recargar Billetera
+                        Consultar Saldo
                     </Button>
 
                 </div>
@@ -83,11 +83,11 @@ const chargePage = () => {
             </div>
 
             {
-                showModalInfo && <ModalInfo title='Recarga de Billetera' message={modalInfoMessage} openModal={showModalInfo} onCloseManual={closeModalDetail}/>
+                showModalInfo && <ModalInfo title='Consulta de saldo' message={modalInfoMessage} openModal={showModalInfo} onCloseManual={closeModalDetail}/>
             }
 
             {
-                showModalLoading && <ModalLoading title='Recargando Billetera' />
+                showModalLoading && <ModalLoading title='Consultando saldo' />
             }
 
         </div>

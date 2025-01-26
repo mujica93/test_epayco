@@ -53,10 +53,11 @@ const createTables = async () => {
             deleted_at TIMESTAMP NULL DEFAULT NULL,
             FOREIGN KEY (id_user) REFERENCES users(id)
     )`;
-    
-    const insertUser = `INSERT INTO users (dni, fullname,email,phone) VALUES ("21640301","Yefferson Mujica","jefersonmujica@gmail.com","04127261953")`;
-    
-    const insertWallet = `INSERT INTO wallets (id_user, balance) VALUES (1, 100)`;
+
+    //insertamos un usuario por defecto y validamos que no exista
+const insertUser = `INSERT INTO users (id, dni, fullname, email, phone) SELECT 1, "21640301", "Yefferson Mujica", "jefersonmujica@gmail.com", "04127261953" WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = 1)`;
+
+const insertWallet = `INSERT INTO wallets (id_user, balance) SELECT 1, 100 WHERE NOT EXISTS (SELECT 1 FROM wallets WHERE id_user = 1)`;
 
     try {
         const connection = await pool.getConnection();

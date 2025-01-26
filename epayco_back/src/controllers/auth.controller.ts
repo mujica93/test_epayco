@@ -22,7 +22,7 @@ authController.register = async (req: Request, res: Response) => {
         const connection = await pool.getConnection();
 
         const [user]: any = await connection.query('SELECT * FROM users WHERE email = ?', [email]);
-
+        
         if (user.length > 0) {
             connection.release();
             responseJson.code = 400;
@@ -32,7 +32,9 @@ authController.register = async (req: Request, res: Response) => {
             return res.status(400).json(responseJson);
         }
 
-        if (user[0].dni === dni){
+        const [userDni]: any = await connection.query('SELECT * FROM users WHERE dni = ?', [dni]);
+
+        if (userDni.length > 0) {
             connection.release();
             responseJson.code = 400;
             responseJson.success = false;
