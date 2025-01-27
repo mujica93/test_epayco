@@ -17,8 +17,8 @@ ePayco es una aplicación web que permite a los usuarios registrar, recargar y c
 ### Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu_usuario/epayco.git
-cd epayco
+git clone https://github.com/tu_usuario/test_epayco.git
+cd test_epayco
 
 ### Backend
 
